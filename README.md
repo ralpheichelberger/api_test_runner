@@ -43,7 +43,7 @@ testrun:
 ```
 store: result1
 ...
-body: '{code:"{{result.code}}"}'
+body: '{code:"{{result1.code}}"}'
 ```
 
 ###  After testruns are written the api_test_runner can be started with following flags:
