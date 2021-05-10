@@ -33,10 +33,19 @@ testrun:
         path: add_receipt_item
         contenttype: application/json
         body: <JSON request body>
+        store: <variable name>
       response:
         description: <description of what is expected as response>
         body: <JSON response string>
 ```
+### With 'store' a JSON result of a request can be provided via mustasch syntax like so:
+
+```
+store: result1
+...
+body: '{code:"{{result.code}}"}'
+```
+
 ###  After testruns are written the api_test_runner can be started with following flags:
 	-v verbose
         all descriptions, request and response bodies are printed out
