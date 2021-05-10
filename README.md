@@ -8,6 +8,7 @@ All test files are located in the sub directory 'tests'.
 
 They have the following structure:
 
+```yaml
 host:
   protocol: <http/https>
   name: <hostname>
@@ -35,8 +36,8 @@ testrun:
       response:
         description: <description of what is expected as response>
         body: <JSON response string>
-
-After testruns are written the api_test_runner can be started with following flags:
+```
+###  After testruns are written the api_test_runner can be started with following flags:
 	-v verbose
         all descriptions, request and response bodies are printed out
 	-q quiet
@@ -45,6 +46,3 @@ After testruns are written the api_test_runner can be started with following fla
         Runs only a test with the given test ID. Multiple tests can share the same ID.
 	-s stop on first error
         stops testing after first failed test
-
-
-# api_test_runner
