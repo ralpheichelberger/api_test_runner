@@ -1,0 +1,68 @@
+# MMS tester
+host:
+  protocol: http
+  name: localhost
+  port: 8090
+testrun:
+  skip: false
+  name: Init Database for Testing
+  description: >-
+    tests the api function to initiates all nessesary data and add additional data
+  tests:
+    - request:
+        description: Init Database (delete all documents for a fresh start)
+        method: GET
+        path: test
+      response:
+        #description: should return 200 OK
+        code: 200
+        message: OK
+    - request:
+        method: POST
+        path: reason
+        contenttype: application/json
+        body: "{\"id\":1,\"name\":\"sold\"}"
+      response:
+        code: 200
+        message: success
+    - request:
+        method: POST
+        path: supplier
+        contenttype: application/json
+        body: "{\"id\":1,\"name\":\"Eurogast\",\"address\":{\"postal\":{\"name\":\"Speckbacher Handels GmbH\",\"street\":\"Großfeldstraße 15\",\"zip\":\"6600\",\"city\":\"Reutte\"},\"email\":\"kundenservice@speckbacher.at\",\"phone\":\"+43 5672 622 17\"},\"storages\":[1]}"
+      response:
+        code: 200
+        message: success
+    - request:
+        method: POST
+        path: product
+        contenttype: application/json
+        body: "{\"code\":\"7613034471888\",\"name\":\"Nescafe Gold Crema\",\"text\":\"Nescafe Instantkaffee 200g löslicher Kaffee\",\"price\":1200,\"purchase\":99,\"tax_group_id\":1}"
+      response:
+        code: 200
+        message: success
+    - request:
+        method: POST
+        path: product
+        contenttype: application/json
+        body: "{\"id\":2,\"code\":\"9005441083910\",\"name\":\"Aurita Magnesium\",\"text\":\"Aurita Magnesium aktiv Tabletten, 90 St\",\"price\":600,\"purchase\":385,\"tax_group_id\":2}}"
+      response:
+        code: 200
+        message: success
+    - request:
+        method: POST
+        path: tax_group
+        contenttype: application/json
+        body: "{\"id\":1,\"name\":\"normal\",\"items\":[{\"rate\":20,\"valid_from\":0}]}"
+      response:
+        code: 200
+        message: success
+    - request:
+        method: POST
+        path: tax_group
+        contenttype: application/json
+        body: "{\"id\":2,\"name\":\"reduced1\",\"items\":[{\"rate\":10,\"valid_from\":0}]}"
+      response:
+        code: 200
+        message: success
+

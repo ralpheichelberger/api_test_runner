@@ -1,0 +1,77 @@
+host:
+  protocol: http
+  name: localhost
+  port: 8090
+testrun:
+  skip: false
+  name: Test API
+  description: >-
+    Test activity api
+  tests:
+    - request:
+        id: 1
+        description: Register with ID 3001 starts a new receipt
+        method: POST
+        path: new_receipt
+        contenttype: application/json
+        body: "{\"register_id\":3001}"
+        store: receipt1
+      response:
+        description: should return a empty receipt with a new receipt code
+        body: "^{\"code\":\"µ0-9]{20}\",\"itemlist\":[],\"payments\":[],\"status\":\"open\",\"total\":{}}"
+    - request:
+        id: 2
+        description: add first product to the receipt
+        method: POST
+        path: add_receipt_item
+        contenttype: application/json
+        body: "{\"receiptcode\":\"{{receipt1.code}}\",\"customer_id\":10077,\"item_code\":\"7613034471888\",\"qty\":1}"
+      response:
+        description: should return a receipt including the item in the item list and and updated total
+        body: '{"code":"{{receipt1.code}}","itemlist":[{"discount":{"fix":0,"rate":0,"text":""},"price":1200,"product":{"code":"7613034471888","name":"Nescafe Gold Crema","price":1200,"purchase":99,"tax_group_id":1,"text":"Nescafe Instantkaffee 200g löslicher Kaffee"},"qty":1,"receipt_code":"{{receipt1.code}}","tax_rate":20,"total":1200}],"status":"open","total":{"discount_amount":0,"price":1200,"taxes":[{"amount":200,"rate":20}]}}'
+    - request:
+        id: 3
+        description: try to add a item with unknown code
+        method: POST
+        path: add_receipt_item
+        contenttype: application/json
+        body: "{\"receiptcode\":\"{{receipt1.code}}\",\"customer_id\":10077,\"item_code\":\"9613034471888\",\"qty\":1}"
+      response:
+        description: should return code 404 not found
+        body: "{\"code\":404,\"message\":\"Product with code '9613034471888' not found\"}"
+    - request:
+        id: 5
+        description: add the same product to the receipt again
+        method: POST
+        path: add_receipt_item
+        contenttype: application/json
+        body: "{\"receiptcode\":\"{{receipt1.code}}\",\"customer_id\":10077,\"item_code\":\"7613034471888\",\"qty\":1}"
+      response:
+        description: should increase the qty of the item in the list and recalulate total values
+        body: '{"code":"{{receipt1.code}}","itemlist":[{"discount":{"fix":0,"rate":0,"text":""},"price":1200,"product":{"code":"7613034471888","name":"Nescafe Gold Crema","price":1200,"purchase":99,"tax_group_id":1,"text":"Nescafe Instantkaffee 200g löslicher Kaffee"},"qty":2,"receipt_code":"{{receipt1.code}}","tax_rate":20,"total":2400}],"status":"open","total":{"discount_amount":0,"price":2400,"taxes":[{"amount":400,"rate":20}]}}'
+    - request:
+        id: 6
+        description: register 1002 starts a first receipt
+        method: POST
+        path: new_receipt
+        contenttype: application/json
+        body: "{\"register_id\":1002}"
+        store: receipt2
+      response:
+        description: should return a empty receipt with a new receipt code for register 1002
+        body: "^{\"code\":\"µ0-9]{20}\",\"itemlist\":[],\"payments\":[],\"status\":\"open\",\"total\":{}}"
+    - request:
+        id: 7
+        skip: false
+        description: add first product to the new receipt with a product that has no price
+        method: POST
+        path: add_receipt_item
+        contenttype: application/json
+        body: "{\"receiptcode\":\"{{receipt2.code}}\",\"item_code\":\"8710912554448\",\"qty\":1}"
+      response:
+        description: should return an error stating that the product has no price
+        body: "{\"code\":404,\"message\":\"Product with code '8710912554448' not found\"}"
+
+
+
+
