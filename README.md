@@ -46,6 +46,11 @@ store: result1
 body: '{code:"{{result1.code}}"}'
 ```
 
+### Regular expressions are supported
+
+BUT you need to use 'µ' instead of '[' - I couldn't get JSON an regex working without this substitution hack - any ideas? E.g. "^[0..9]" you need to use "^µ0..9]" - sorry
+
+
 ###  After testruns are written the api_test_runner can be started with following flags:
 	-v verbose
         all descriptions, request and response bodies are printed out
